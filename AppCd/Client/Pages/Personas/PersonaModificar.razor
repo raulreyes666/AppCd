@@ -1,0 +1,54 @@
+﻿@page "/personas/editar/{Id:int}"
+
+<h3 class="text-center">Modificar persona</h3>
+
+@using AppCd.Shared.Modelo;
+@inject HttpClient http
+@inject NavigationManager navegar
+
+<EditForm Model="laPersona" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+    <label for="txtNombre" class="form-label">Nombre</label>
+   <InputText class="form-control" id="txtNombre" @bind-Value="laPersona.Nombre"></InputText>
+   <ValidationMessage For="(() => laPersona.Nombre)" />
+    </div>
+    <div class="mb-3">
+    <label for="txtCorreo" class="form-label">Correo</label>
+   <InputText  class="form-control"i d="txtCorreo" @bind-Value="laPersona.Correo"></InputText>
+   <ValidationMessage For="(() => laPersona.Correo)" />
+    </div>
+    <div class="mb-3">
+    <label class="form-label" for="txtTelefono">Telefono</label>
+   <InputText class="form-control" id="txtTelefono" @bind-Value="laPersona.Telefono"></InputText>
+   <ValidationMessage For="(() => laPersona.Telefono)" />
+    </div>
+
+    <button type="submit" class="btn btn-dark">Guardar</button>
+
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int Id {get; set;}
+    private Persona laPersona = new Persona();
+
+    protected override async Task OnInitializedAsync()
+    {
+        laPersona = await http.GetFromJsonAsync<Persona>($"api/personas/{Id}");
+    }
+
+
+    protected async void Guardar()
+    {
+        await http.PutAsJsonAsync($"api/personas/{Id}", laPersona);
+        navegar.NavigateTo("/personas");
+    } 
+    
+    
+
+
+
+}

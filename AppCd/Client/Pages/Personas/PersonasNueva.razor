@@ -1,0 +1,41 @@
+﻿@page "/personas/nueva"
+@using AppCd.Shared.Modelo;
+<h3 class="text-center">Nueva persona</h3>
+@inject HttpClient http
+@inject NavigationManager navegar
+
+<EditForm Model="laPersona" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+    <label for="txtNombre" class="form-label">Nombre</label>
+   <InputText class="form-control" id="txtNombre" @bind-Value="laPersona.Nombre"></InputText>
+   <ValidationMessage For="(() => laPersona.Nombre)" />
+    </div>
+    <div class="mb-3">
+    <label for="txtCorreo" class="form-label">Correo</label>
+   <InputText  class="form-control"i d="txtCorreo" @bind-Value="laPersona.Correo"></InputText>
+   <ValidationMessage For="(() => laPersona.Correo)" />
+    </div>
+    <div class="mb-3">
+    <label class="form-label" for="txtTelefono">Telefono</label>
+   <InputText class="form-control" id="txtTelefono" @bind-Value="laPersona.Telefono"></InputText>
+   <ValidationMessage For="(() => laPersona.Telefono)" />
+    </div>
+
+    <button type="submit" class="btn btn-dark text-center justify-content-center">Guardar</button>
+
+
+</EditForm>
+@code {
+    private Persona laPersona = new Persona();
+
+    private async void Guardar()
+    {
+        await http.PostAsJsonAsync("api/personas", laPersona);
+        navegar.NavigateTo("/personas");
+
+    }
+    
+        
+    }
+
